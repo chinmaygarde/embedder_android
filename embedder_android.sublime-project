@@ -2,8 +2,8 @@
   "build_systems": [
     {
       "name": "Default",
-      "shell_cmd": "et build -c host_debug_unopt_arm64 && ./impeller_unittests --gtest_filter=\"*InteropPlaygroundTest*CanDrawImage/OpenGLES\" --enable_playground --playground_timeout_ms=10000",
-      "working_dir": "${project_path}",
+      "shell_cmd": "cmake --build build",
+      "working_dir": "${project_path}/app/src/main/cpp",
       "file_regex": "(.*):([\\d]+):([\\d]+):? ?((?:error|fatal error|warning|note|Failure):? ?.*)",
       "shell": true,
     },
