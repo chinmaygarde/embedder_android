@@ -2,11 +2,7 @@
 
 namespace embedder {
 
-Engine::Engine() {
-  // if (FlutterEngineGetProcAddresses(&proc_table_) !=
-  //     FlutterEngineResult::kSuccess) {
-  // }
-}
+Engine::Engine() {}
 
 Engine::~Engine() {}
 

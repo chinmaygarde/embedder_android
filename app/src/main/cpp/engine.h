@@ -1,6 +1,6 @@
 #pragma once
 
-#include "embedder.h"
+#include "flutter_embedder.h"
 #include "macros.h"
 
 namespace embedder {
