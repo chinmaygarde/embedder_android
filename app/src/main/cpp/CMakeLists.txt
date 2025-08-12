@@ -40,6 +40,8 @@ message(STATUS "Downloaded Flutter Embedder SDK at version https://github.com/fl
 
 # This must match the value in android.app.lib_name in AndroidManifest.xml
 add_library(embedder SHARED
+  activity.cc
+  activity.h
   egl/config.cc
   egl/config.h
   egl/context.cc
@@ -50,7 +52,7 @@ add_library(embedder SHARED
   egl/egl_portable.h
   egl/surface.cc
   egl/surface.h
-  embedder.cc
+  main.cc
   engine.cc
   engine.h
   logging.cc
