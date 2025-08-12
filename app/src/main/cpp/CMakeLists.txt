@@ -5,7 +5,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_C_STANDARD              99)
 set(CMAKE_CXX_STANDARD            20)
 
-cmake_policy(SET CMP0135 NEW)
+# cmake_policy(SET CMP0135 NEW)
 include(FetchContent)
 
 # Enable CCache if available.
@@ -40,6 +40,18 @@ message(STATUS "Downloaded Flutter Embedder SDK at version https://github.com/fl
 
 # This must match the value in android.app.lib_name in AndroidManifest.xml
 add_library(embedder SHARED
+  egl/config.cc
+  egl/config.h
+  egl/context.cc
+  egl/context.h
+  egl/display.cc
+  egl/display.h
+  egl/egl.cc
+  egl/egl.h
+  egl/image.cc
+  egl/image.h
+  egl/surface.cc
+  egl/surface.h
   embedder.cc
   engine.cc
   engine.h

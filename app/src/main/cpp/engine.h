@@ -11,9 +11,22 @@ class Engine {
 
   ~Engine();
 
+  bool Launch();
+
+  bool IsRunning() const;
+
  private:
-  FlutterEngineProcTable proc_table_ = {};
-  bool is_valid_ = false;
+  FlutterEngine engine_ = {};
+
+  bool MakeCurrent();
+
+  bool ClearCurrent();
+
+  bool Present();
+
+  uint32_t GetOnscreenFBO();
+
+  void* GetProcAddress(const char* proc_name);
 
   EM_DISALLOW_COPY_ASSIGN_AND_MOVE(Engine);
 };

@@ -13,6 +13,11 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        ndk {
+            abiFilters.clear()
+            abiFilters.add("arm64-v8a")
+        }
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -30,6 +35,9 @@ android {
             )
         }
     }
+
+
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -46,7 +54,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)

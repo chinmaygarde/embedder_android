@@ -1,12 +1,17 @@
 #include <android/log.h>
 #include <android/native_activity.h>
+#include <flutter_embedder.h>
 #include <jni.h>
 #include <stdlib.h>
 #include "logging.h"
 
-__attribute__((visibility("default"))) void ANativeActivity_onCreate(
+namespace embedder {
+
+EM_EXTERN_C EM_VISIBILITY_DEFAULT void ANativeActivity_onCreate(
     ANativeActivity* activity,
-    void* savedState,
-    size_t savedStateSize) {
-  LOG_FATAL << "Hello";
+    void* saved_state,
+    size_t saved_state_size) {
+  LOG_FATAL << FlutterEngineRunsAOTCompiledDartCode();
 }
+
+}  // namespace embedder

@@ -6,4 +6,7 @@
   TypeName& operator=(const TypeName&) = delete;   \
   TypeName& operator=(TypeName&&) = delete
 
+#define EM_EXTERN_C extern "C"
+#define EM_VISIBILITY_DEFAULT __attribute__((visibility("default")))
+
 namespace embedder {}
