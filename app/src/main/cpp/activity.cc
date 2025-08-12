@@ -67,6 +67,7 @@ void Activity::OnNativeWindowCreated(ANativeWindow* window) {
   }
 
   surfaces_[window] = std::move(surface);
+  StartEngine();
 }
 
 void Activity::OnNativeWindowResize(ANativeWindow* window) {
@@ -74,10 +75,16 @@ void Activity::OnNativeWindowResize(ANativeWindow* window) {
     LOG_ERROR << "Embedder only supports one window.";
     return;
   }
+  UpdateEngineSurfaceSize();
 }
 
 void Activity::OnNativeWindowDestroyed(ANativeWindow* window) {
-  surfaces_.erase(window);
+  auto erased = surfaces_.erase(window) == 1u;
+  if (!erased) {
+    LOG_ERROR << "Embedder only supports rendering to one window.";
+    return;
+  }
+  StopEngine();
 }
 
 void Activity::OnLowMemory() {}
@@ -118,6 +125,34 @@ bool Activity::InstallCallbacks(ANativeActivity* activity) {
   };
   return true;
 #undef ACT
+}
+
+bool Activity::StartEngine() {
+  auto engine = std::make_unique<Engine>();
+  if (!engine->Launch()) {
+    return false;
+  }
+  UpdateEngineSurfaceSize();
+  engine_ = std::move(engine);
+  return true;
+}
+
+bool Activity::StopEngine() {
+  engine_.reset();
+  return true;
+}
+
+void Activity::UpdateEngineSurfaceSize() {
+  if (surfaces_.empty() || !engine_) {
+    return;
+  }
+  auto window = surfaces_.begin()->first;
+  const auto width = std::max(0, ANativeWindow_getWidth(window));
+  const auto height = std::max(0, ANativeWindow_getHeight(window));
+  engine_->SetSurfaceSize(FlutterUIntSize{
+      .width = width,
+      .height = height,
+  });
 }
 
 }  // namespace embedder

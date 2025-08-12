@@ -5,6 +5,19 @@
 
 namespace embedder {
 
+class EngineDelegate {
+ public:
+  virtual bool GLRenderContextMakeCurrent() = 0;
+
+  virtual bool GLContextClearCurrent() = 0;
+
+  virtual bool GLContextPresent() = 0;
+
+  virtual uint32_t GLRenderContextFBO() = 0;
+
+  virtual void* GLGetProcAddress(const char* proc_name) = 0;
+};
+
 class Engine {
  public:
   Engine();
@@ -15,8 +28,16 @@ class Engine {
 
   bool IsRunning() const;
 
+  void SetDelegate(EngineDelegate* delegate);
+
+  void SetSurfaceSize(FlutterUIntSize size);
+
+  void SetSurfaceSize();
+
  private:
   FlutterEngine engine_ = {};
+  EngineDelegate* delegate_ = {};
+  FlutterUIntSize window_size_ = {};
 
   bool MakeCurrent();
 

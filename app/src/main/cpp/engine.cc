@@ -7,7 +7,25 @@ namespace embedder {
 
 Engine::Engine() {}
 
-Engine::~Engine() {}
+Engine::~Engine() {
+  if (engine_) {
+    FlutterEngineShutdown(engine_);
+  }
+}
+
+static const char* FlutterEngineResultToString(FlutterEngineResult result) {
+  switch (result) {
+    case kSuccess:
+      return "Success";
+    case kInvalidLibraryVersion:
+      return "Invalid Library Version";
+    case kInvalidArguments:
+      return "Invalid Arguments";
+    case kInternalInconsistency:
+      return "Internal Inconsistency";
+  }
+  return "Unknown";
+}
 
 bool Engine::Launch() {
   if (IsRunning()) {
@@ -45,35 +63,62 @@ bool Engine::Launch() {
                                                 &engine                  //
   );
   if (result != kSuccess || engine == nullptr) {
-    LOG_ERROR << "Could not launch the Flutter engine.";
+    LOG_ERROR << "Could not launch the Flutter engine: "
+              << FlutterEngineResultToString(result);
     return false;
   }
   engine_ = engine;
+  SetSurfaceSize();
   return true;
 }
 
 bool Engine::MakeCurrent() {
-  return false;
+  return delegate_ ? delegate_->GLRenderContextMakeCurrent() : false;
 }
 
 bool Engine::ClearCurrent() {
-  return false;
+  return delegate_ ? delegate_->GLContextClearCurrent() : false;
 }
 
 bool Engine::Present() {
-  return false;
+  return delegate_ ? delegate_->GLContextPresent() : false;
 }
 
 uint32_t Engine::GetOnscreenFBO() {
-  return 0;
+  return delegate_ ? delegate_->GLRenderContextFBO() : 0u;
 }
 
 void* Engine::GetProcAddress(const char* proc_name) {
-  return nullptr;
+  return delegate_ ? delegate_->GLGetProcAddress(proc_name) : nullptr;
 }
 
 bool Engine::IsRunning() const {
-  return !!engine_;
+  return engine_ != nullptr;
+}
+
+void Engine::SetDelegate(EngineDelegate* delegate) {
+  delegate_ = delegate;
+}
+
+void Engine::SetSurfaceSize(FlutterUIntSize size) {
+  window_size_ = size;
+  if (!engine_) {
+    return;
+  }
+  FlutterWindowMetricsEvent metrics = {};
+  metrics.struct_size = sizeof(metrics);
+  metrics.width = window_size_.width;
+  metrics.height = window_size_.height;
+  metrics.pixel_ratio = 1.0;
+  auto result = FlutterEngineSendWindowMetricsEvent(engine_, &metrics);
+  if (result != kSuccess) {
+    LOG_ERROR << "Could not dispatch window metrics: "
+              << FlutterEngineResultToString(result);
+  }
+}
+
+void Engine::SetSurfaceSize() {
+  SetSurfaceSize(window_size_);
 }
 
 }  // namespace embedder
