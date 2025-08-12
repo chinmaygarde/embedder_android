@@ -2,12 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "egl.h"
+#include "egl_portable.h"
 
-#include "flutter/fml/logging.h"
+#include "logging.h"
 
-namespace impeller {
-namespace egl {
+namespace embedder {
 
 std::function<void*(const char*)> CreateProcAddressResolver() {
   return [](const char* name) -> void* {
@@ -53,9 +52,8 @@ static const char* EGLErrorToString(EGLint error) {
 
 void LogEGLError(const char* file, int line) {
   const auto error = ::eglGetError();
-  FML_LOG(ERROR) << "EGL Error: " << EGLErrorToString(error) << " (" << error
-                 << ") in " << file << ":" << line;
+  LOG_ERROR << "EGL Error: " << EGLErrorToString(error) << " (" << error
+            << ") in " << file << ":" << line;
 }
 
-}  // namespace egl
-}  // namespace impeller
+}  // namespace embedder

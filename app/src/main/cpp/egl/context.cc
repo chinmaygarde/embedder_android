@@ -6,8 +6,7 @@
 
 #include "surface.h"
 
-namespace impeller {
-namespace egl {
+namespace embedder {
 
 Context::Context(EGLDisplay display, EGLContext context)
     : display_(display), context_(context) {}
@@ -54,12 +53,10 @@ bool Context::MakeCurrent(const Surface& surface) const {
   if (!result) {
     IMPELLER_LOG_EGL_ERROR;
   }
-  DispatchLifecyleEvent(LifecycleEvent::kDidMakeCurrent);
   return result;
 }
 
 bool Context::ClearCurrent() const {
-  DispatchLifecyleEvent(LifecycleEvent::kWillClearCurrent);
   const auto result = EGLMakeCurrentIfNecessary(display_,        //
                                                 EGL_NO_SURFACE,  //
                                                 EGL_NO_SURFACE,  //
@@ -71,37 +68,8 @@ bool Context::ClearCurrent() const {
   return result;
 }
 
-std::optional<UniqueID> Context::AddLifecycleListener(
-    const LifecycleListener& listener) {
-  if (!listener) {
-    return std::nullopt;
-  }
-  WriterLock lock(listeners_mutex_);
-  UniqueID id;
-  listeners_[id] = listener;
-  return id;
-}
-
-bool Context::RemoveLifecycleListener(UniqueID id) {
-  WriterLock lock(listeners_mutex_);
-  auto found = listeners_.find(id);
-  if (found == listeners_.end()) {
-    return false;
-  }
-  listeners_.erase(found);
-  return true;
-}
-
-void Context::DispatchLifecyleEvent(LifecycleEvent event) const {
-  ReaderLock lock(listeners_mutex_);
-  for (const auto& listener : listeners_) {
-    listener.second(event);
-  }
-}
-
 bool Context::IsCurrent() const {
   return ::eglGetCurrentContext() == context_;
 }
 
-}  // namespace egl
-}  // namespace impeller
+}  // namespace embedder

@@ -5,15 +5,14 @@
 #ifndef FLUTTER_IMPELLER_TOOLKIT_EGL_SURFACE_H_
 #define FLUTTER_IMPELLER_TOOLKIT_EGL_SURFACE_H_
 
-#include "egl.h"
+#include "egl_portable.h"
 
-namespace impeller {
-namespace egl {
+namespace embedder {
 
 //------------------------------------------------------------------------------
 /// @brief      An instance of an EGL surface. There is no ability to create
-///             surfaces directly. Instead, one must be created using a Display
-///             connection.
+///             surfaces directly. Instead, one must be created using a
+///             Display connection.
 ///
 class Surface {
  public:
@@ -50,7 +49,6 @@ class Surface {
   Surface& operator=(const Surface&) = delete;
 };
 
-}  // namespace egl
-}  // namespace impeller
+}  // namespace embedder
 
 #endif  // FLUTTER_IMPELLER_TOOLKIT_EGL_SURFACE_H_

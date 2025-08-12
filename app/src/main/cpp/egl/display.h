@@ -8,10 +8,9 @@
 #include <memory>
 
 #include "config.h"
-#include "egl.h"
+#include "egl_portable.h"
 
-namespace impeller {
-namespace egl {
+namespace embedder {
 
 class Context;
 class Surface;
@@ -106,7 +105,6 @@ class Display {
   Display& operator=(const Display&) = delete;
 };
 
-}  // namespace egl
-}  // namespace impeller
+}  // namespace embedder
 
 #endif  // FLUTTER_IMPELLER_TOOLKIT_EGL_DISPLAY_H_

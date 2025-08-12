@@ -7,12 +7,9 @@
 
 #include <functional>
 
-#include "egl.h"
-#include "impeller/base/comparable.h"
-#include "impeller/base/thread.h"
+#include "egl_portable.h"
 
-namespace impeller {
-namespace egl {
+namespace embedder {
 
 class Surface;
 class Display;
@@ -68,37 +65,6 @@ class Context {
   ///
   bool ClearCurrent() const;
 
-  enum class LifecycleEvent {
-    kDidMakeCurrent,
-    kWillClearCurrent,
-  };
-  using LifecycleListener = std::function<void(LifecycleEvent)>;
-  //----------------------------------------------------------------------------
-  /// @brief      Add a listener that gets invoked when the context is made and
-  ///             cleared current from the thread. Applications typically use
-  ///             this to manage workers that schedule OpenGL API calls that
-  ///             need to be careful about the context being current when
-  ///             called.
-  ///
-  /// @param[in]  listener  The listener
-  ///
-  /// @return     A unique ID for the listener that can used used in
-  ///             `RemoveLifecycleListener` to remove a previously added
-  ///             listener.
-  ///
-  std::optional<UniqueID> AddLifecycleListener(
-      const LifecycleListener& listener);
-
-  //----------------------------------------------------------------------------
-  /// @brief      Remove a previously added context listener.
-  ///
-  /// @param[in]  id    The identifier obtained via a previous call to
-  ///                   `AddLifecycleListener`.
-  ///
-  /// @return     True if the listener could be removed.
-  ///
-  bool RemoveLifecycleListener(UniqueID id);
-
   //----------------------------------------------------------------------------
   /// @return     True if the context is current and attached to any surface,
   ///             False otherwise.
@@ -110,20 +76,14 @@ class Context {
 
   EGLDisplay display_ = EGL_NO_DISPLAY;
   EGLContext context_ = EGL_NO_CONTEXT;
-  mutable RWMutex listeners_mutex_;
-  std::map<UniqueID, LifecycleListener> listeners_ IPLR_GUARDED_BY(
-      listeners_mutex_);
 
   Context(EGLDisplay display, EGLContext context);
-
-  void DispatchLifecyleEvent(LifecycleEvent event) const;
 
   Context(const Context&) = delete;
 
   Context& operator=(const Context&) = delete;
 };
 
-}  // namespace egl
-}  // namespace impeller
+}  // namespace embedder
 
 #endif  // FLUTTER_IMPELLER_TOOLKIT_EGL_CONTEXT_H_

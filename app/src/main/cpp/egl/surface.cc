@@ -4,8 +4,7 @@
 
 #include "surface.h"
 
-namespace impeller {
-namespace egl {
+namespace embedder {
 
 Surface::Surface(EGLDisplay display, EGLSurface surface)
     : display_(display), surface_(surface) {}
@@ -34,5 +33,4 @@ bool Surface::Present() const {
   return result;
 }
 
-}  // namespace egl
-}  // namespace impeller
+}  // namespace embedder

@@ -11,11 +11,11 @@
 
 #include <functional>
 
-namespace impeller {
-namespace egl {
+namespace embedder {
 
 //------------------------------------------------------------------------------
-/// @brief      Creates a proc address resolver that resolves function pointers
+/// @brief      Creates a proc address resolver that resolves function
+/// pointers
 ///             to EGL and OpenGL (ES) procs.
 ///
 /// @return     The resolver if one can be created.
@@ -26,7 +26,6 @@ std::function<void*(const char*)> CreateProcAddressResolver();
 
 void LogEGLError(const char* file, int line);
 
-}  // namespace egl
-}  // namespace impeller
+}  // namespace embedder
 
 #endif  // FLUTTER_IMPELLER_TOOLKIT_EGL_EGL_H_

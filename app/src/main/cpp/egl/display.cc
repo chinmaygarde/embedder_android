@@ -7,11 +7,9 @@
 #include <vector>
 
 #include "context.h"
-#include "flutter/fml/logging.h"
 #include "surface.h"
 
-namespace impeller {
-namespace egl {
+namespace embedder {
 
 Display::Display() {
   EGLDisplay display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
@@ -210,5 +208,4 @@ const EGLDisplay& Display::GetHandle() const {
   return display_;
 }
 
-}  // namespace egl
-}  // namespace impeller
+}  // namespace embedder

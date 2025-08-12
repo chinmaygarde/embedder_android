@@ -46,10 +46,8 @@ add_library(embedder SHARED
   egl/context.h
   egl/display.cc
   egl/display.h
-  egl/egl.cc
-  egl/egl.h
-  egl/image.cc
-  egl/image.h
+  egl/egl_portable.cc
+  egl/egl_portable.h
   egl/surface.cc
   egl/surface.h
   embedder.cc
@@ -60,8 +58,11 @@ add_library(embedder SHARED
   macros.h
 )
 
+target_include_directories(embedder PUBLIC .)
+
 target_link_libraries(embedder
   android
   log
   flutter_embedder_sdk
+  EGL
 )

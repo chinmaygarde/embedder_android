@@ -5,10 +5,9 @@
 #ifndef FLUTTER_IMPELLER_TOOLKIT_EGL_CONFIG_H_
 #define FLUTTER_IMPELLER_TOOLKIT_EGL_CONFIG_H_
 
-#include "egl.h"
+#include "egl_portable.h"
 
-namespace impeller {
-namespace egl {
+namespace embedder {
 
 enum class API {
   kOpenGL,
@@ -83,7 +82,6 @@ class Config {
   Config& operator=(const Config&) = delete;
 };
 
-}  // namespace egl
-}  // namespace impeller
+}  // namespace embedder
 
 #endif  // FLUTTER_IMPELLER_TOOLKIT_EGL_CONFIG_H_

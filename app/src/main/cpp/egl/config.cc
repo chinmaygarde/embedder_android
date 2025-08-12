@@ -4,10 +4,7 @@
 
 #include "config.h"
 
-#include <utility>
-
-namespace impeller {
-namespace egl {
+namespace embedder {
 
 Config::Config(ConfigDescriptor descriptor, EGLConfig config)
     : desc_(descriptor), config_(config) {}
@@ -26,5 +23,4 @@ bool Config::IsValid() const {
   return config_ != nullptr;
 }
 
-}  // namespace egl
-}  // namespace impeller
+}  // namespace embedder
