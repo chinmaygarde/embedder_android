@@ -68,3 +68,5 @@ target_link_libraries(embedder
   flutter_embedder_sdk
   EGL
 )
+
+target_link_options(embedder PRIVATE "-Wl,-z,max-page-size=16384")
