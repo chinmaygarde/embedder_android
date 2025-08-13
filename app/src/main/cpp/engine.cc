@@ -54,6 +54,8 @@ bool Engine::Launch() {
 
   FlutterProjectArgs args = {};
   args.struct_size = sizeof(args);
+  args.assets_path = "";
+  args.icu_data_path = "";
 
   FlutterEngine engine = nullptr;
   FlutterEngineResult result = FlutterEngineRun(FLUTTER_ENGINE_VERSION,  //

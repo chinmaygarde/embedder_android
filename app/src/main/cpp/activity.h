@@ -10,7 +10,7 @@
 
 namespace embedder {
 
-class Activity {
+class Activity final : public EngineDelegate {
  public:
   Activity(ANativeActivity* activity);
 
@@ -46,6 +46,21 @@ class Activity {
   bool StopEngine();
 
   void UpdateEngineSurfaceSize();
+
+  // |EngineDelegate|
+  bool GLRenderContextMakeCurrent();
+
+  // |EngineDelegate|
+  bool GLContextClearCurrent();
+
+  // |EngineDelegate|
+  bool GLContextPresent();
+
+  // |EngineDelegate|
+  uint32_t GLRenderContextFBO();
+
+  // |EngineDelegate|
+  void* GLGetProcAddress(const char* proc_name);
 
   EM_DISALLOW_COPY_ASSIGN_AND_MOVE(Activity);
 };

@@ -129,6 +129,7 @@ bool Activity::InstallCallbacks(ANativeActivity* activity) {
 
 bool Activity::StartEngine() {
   auto engine = std::make_unique<Engine>();
+  engine->SetDelegate(this);
   if (!engine->Launch()) {
     return false;
   }
@@ -150,9 +151,40 @@ void Activity::UpdateEngineSurfaceSize() {
   const auto width = std::max(0, ANativeWindow_getWidth(window));
   const auto height = std::max(0, ANativeWindow_getHeight(window));
   engine_->SetSurfaceSize(FlutterUIntSize{
-      .width = width,
-      .height = height,
+      .width = static_cast<uint32_t>(width),
+      .height = static_cast<uint32_t>(height),
   });
+}
+
+bool Activity::GLRenderContextMakeCurrent() {
+  if (!context_ || surfaces_.empty()) {
+    LOG_ERROR << "No context present.";
+    return false;
+  }
+  return context_->MakeCurrent(*surfaces_.begin()->second);
+}
+
+bool Activity::GLContextClearCurrent() {
+  if (!context_ || surfaces_.empty()) {
+    return true;
+  }
+  return context_->ClearCurrent();
+}
+
+bool Activity::GLContextPresent() {
+  if (!context_ || surfaces_.empty()) {
+    LOG_ERROR << "No context present.";
+    return false;
+  }
+  return surfaces_.begin()->second->Present();
+}
+
+uint32_t Activity::GLRenderContextFBO() {
+  return 0u;
+}
+
+void* Activity::GLGetProcAddress(const char* proc_name) {
+  return CreateProcAddressResolver()(proc_name);
 }
 
 }  // namespace embedder
